@@ -6,6 +6,7 @@ class Dish(BaseModel):
     name: str
     price: float
     img: str
+    description: str
 
 
 class UserRegister(BaseModel):

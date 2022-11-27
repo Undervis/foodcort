@@ -12,7 +12,8 @@ async def root():
 
 @app.post("/add_dish", status_code=200)
 async def add_dish_request(dish: Dish):
-    if db.add_dish(name=dish.name, category=dish.category, price=dish.price, img=dish.img):
+    if db.add_dish(name=dish.name, category=dish.category, price=dish.price, img=dish.img,
+                   description=dish.description):
         return {"message": "Всё пучком", "error": 0}
     else:
         raise HTTPException(status_code=400, detail={"message": "Хана, не добавилось, проверяй параметры", "error": 1})
@@ -22,7 +23,8 @@ async def add_dish_request(dish: Dish):
 async def get_dishes_request():
     dishes = []
     for dish in db.get_dishes():
-        dishes.append({"id": dish[0], "name": dish[2], "category": dish[1], "price": dish[3], 'img_url': dish[4]})
+        dishes.append({"id": dish[0], "name": dish[3], "category": dish[2], "description": dish[1],
+                       "price": dish[4], 'img_url': dish[5]})
     return dishes
 
 
@@ -30,7 +32,8 @@ async def get_dishes_request():
 async def get_dish_request(dish_id: int):
     dish = db.get_dish(dish_id)
     if dish:
-        dish = {"id": dish[0], "name": dish[2], "category": dish[1], "price": dish[3], 'img_url': dish[4]}
+        dish = {"id": dish[0], "name": dish[3], "category": dish[2], "description": dish[1],
+                "price": dish[4], 'img_url': dish[5]}
         return dish
     else:
         raise HTTPException(status_code=400, detail={"message": "Такого блюда не нашлось"})
@@ -57,4 +60,3 @@ async def auth_login_request(user: UserLogin):
         return {"message": "Успешная авторизация", "token": token[0]}
     else:
         raise HTTPException(status_code=400, detail={"message": "Неверный логин или пароль"})
-

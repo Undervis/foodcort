@@ -5,7 +5,8 @@ sql = sqlite3.connect("db.sqlite3")
 cursor = sql.cursor()
 
 cursor.execute("create table if not exists Dish("
-               "id integer primary key autoincrement, category varchar(32), name varchar(32), price float, img text)")
+               "id integer primary key autoincrement, description text, "
+               "category varchar(32), name varchar(32), price float, img text)")
 cursor.execute("create table if not exists User("
                "id integer primary key autoincrement, login varchar(32), email varchar(32), phone varchar(16), "
                "password varchar(32), img text nullable, token int)")
@@ -17,14 +18,15 @@ def get_dishes():
     return cursor.fetchall()
 
 
-def add_dish(category, name, price, img):
-    cursor.execute(f'insert into Dish (category, name, price, img) values ("{category}", "{name}", {price}, "{img}")')
+def add_dish(category, name, price, img, description):
+    cursor.execute(f'insert into Dish (category, name, price, img, description)'
+                   f' values ("{category}", "{name}", {price}, "{img}", "{description}")')
     sql.commit()
     return True
 
 
 def delete_dish(dish_id):
-    cursor.execute(f"delete from Dish where id={dish_id}")
+    cursor.execute(f"delete from Dish where id = {dish_id}")
     sql.commit()
     return True
 
