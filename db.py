@@ -10,6 +10,9 @@ cursor.execute("create table if not exists Dish("
 cursor.execute("create table if not exists User("
                "id integer primary key autoincrement, login varchar(32), email varchar(32), phone varchar(16), "
                "password varchar(32), img text nullable, token int)")
+cursor.execute('create table if not exists Cart('
+               'id integer primary key autoincrement, user_token references User(token), '
+               'dish_id int references Dish(id))')
 sql.commit()
 
 
@@ -22,7 +25,20 @@ def add_dish(category, name, price, img, description):
     cursor.execute(f'insert into Dish (category, name, price, img, description)'
                    f' values ("{category}", "{name}", {price}, "{img}", "{description}")')
     sql.commit()
-    return True
+
+
+def add_to_cart(token, dish_id):
+    cursor.execute(f'insert into Cart (user_token, dish_id) values ({token}, {dish_id})')
+    sql.commit()
+
+
+def get_cart(token):
+    return cursor.execute(f"select * from Cart where user_token={token}").fetchall()
+
+
+def delete_from_cart(cart_item_id, user_token):
+    cursor.execute(f'delete from Cart where id={cart_item_id} and user_token={user_token}')
+    sql.commit()
 
 
 def delete_dish(dish_id):

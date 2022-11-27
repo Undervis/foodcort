@@ -12,11 +12,12 @@ async def root():
 
 @app.post("/add_dish", status_code=200)
 async def add_dish_request(dish: Dish):
-    if db.add_dish(name=dish.name, category=dish.category, price=dish.price, img=dish.img,
-                   description=dish.description):
-        return {"message": "Всё пучком", "error": 0}
-    else:
-        raise HTTPException(status_code=400, detail={"message": "Хана, не добавилось, проверяй параметры", "error": 1})
+    try:
+        db.add_dish(name=dish.name, category=dish.category, price=dish.price, img=dish.img,
+                    description=dish.description)
+        return {"message": "Блюдо добавлено"}
+    except:
+        raise HTTPException(status_code=400, detail={"message": "Что-то пошло не так"})
 
 
 @app.get('/dishes')
@@ -60,3 +61,26 @@ async def auth_login_request(user: UserLogin):
         return {"message": "Успешная авторизация", "token": token[0]}
     else:
         raise HTTPException(status_code=400, detail={"message": "Неверный логин или пароль"})
+
+
+@app.post("/add_to_cart")
+async def add_to_cart_request(user_token: int, dish_id: int):
+    try:
+        db.add_to_cart(user_token, dish_id)
+        return {"message": "Блюдо добавлено в корзину"}
+    except:
+        raise HTTPException(status_code=400, detail={"message": "Что-то пошло не так"})
+
+
+@app.get("/get_cart/{token}")
+async def get_cart_request(token: int):
+    cart = []
+    for item in db.get_cart(token):
+        cart.append({"id": item[0], "dish_id": item[2]})
+    return cart
+
+
+@app.delete("/delete_from_cart")
+async def delete_from_cart_request(item_id: int, user_token: int):
+    db.delete_from_cart(item_id, user_token)
+    return {"message": "Блюдо удалено из корзины"}
