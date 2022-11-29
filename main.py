@@ -101,7 +101,7 @@ async def get_cart_request(token: int):
     cart = []
     for item in db.get_cart(token):
         dish = db.get_dish(item[2])
-        cart.append({"id": item[0], "dish_id": dish[0], "name": dish[3], "category": dish[2], "description": dish[1],
+        cart.append({"id": item[0], "token": item[1], "dish_id": dish[0], "name": dish[3], "category": dish[2], "description": dish[1],
                      "price": dish[4], 'img_url': dish[5]})
     return cart
 
