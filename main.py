@@ -36,10 +36,13 @@ async def root():
 
 @app.post("/add_dish", description="Для добавления нового блюда", tags=['Dishes'])
 async def add_dish_request(dish: Dish):
-    try:
-        db.add_dish(name=dish.name, category=dish.category, price=dish.price, img=dish.img,
-                    description=dish.description)
+    if not db.add_dish(name=dish.name, category=dish.category, price=dish.price, img=dish.img,
+                       description=dish.description):
         return {"message": "Блюдо добавлено"}
+    else:
+        return {"message": "Такое бюдо уже есть"}
+    try:
+        pass
     except:
         raise HTTPException(status_code=400, detail={"message": "Что-то пошло не так"})
 
