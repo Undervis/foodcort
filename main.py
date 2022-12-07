@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.openapi.utils import get_openapi
 from models import *
 import db
 
@@ -41,10 +40,6 @@ async def add_dish_request(dish: Dish):
         return {"message": "Блюдо добавлено"}
     else:
         return {"message": "Такое бюдо уже есть"}
-    try:
-        pass
-    except:
-        raise HTTPException(status_code=400, detail={"message": "Что-то пошло не так"})
 
 
 @app.get('/dishes', description="Вывод списка блюд", tags=['Dishes'])
