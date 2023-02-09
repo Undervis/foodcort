@@ -13,6 +13,9 @@ cursor.execute("create table if not exists User("
 cursor.execute('create table if not exists Cart('
                'id integer primary key autoincrement, user_token references User(token), '
                'dish_id int references Dish(id))')
+cursor.execute('create table if not exists Order('
+               'id integer primary key autoincrement, user_token references User(token),'
+               'dish_id int references Dish(id))')
 sql.commit()
 
 
@@ -38,6 +41,13 @@ def get_cart(token):
 
 def delete_from_cart(cart_item_id, user_token):
     cursor.execute(f'delete from Cart where id={cart_item_id} and user_token={user_token}')
+    sql.commit()
+
+
+def add_to_order(token, cart_ids: list):
+    for d in cart_ids:
+        cursor.execute(f'insert into Order (user_token, dish_id) values ({token}, {d})')
+        cursor.execute(f'delete from Cart where id={d} and user_token={token}')
     sql.commit()
 
 
