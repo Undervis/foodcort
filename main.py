@@ -115,3 +115,9 @@ async def delete_from_cart_request(item_id: int, user_token: int):
 async def add_to_order(user_token: int, cart_ids: list):
     db.add_to_order(user_token, cart_ids)
     return {"message": "Блюда перенесены в заказ"}
+
+
+@app.delete("/delete_from_order", description="Очистка списка заказов", tags=["Cart"])
+async def delete_from_order(user_token: int):
+    db.delete_from_order(user_token)
+    return {"message": "Список заказа очищен"}
