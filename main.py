@@ -121,3 +121,14 @@ async def add_to_order(user_token: int, cart_ids: list):
 async def delete_from_order(user_token: int):
     db.delete_from_order(user_token)
     return {"message": "Список заказа очищен"}
+
+
+@app.get("/order/{user_token}")
+async def get_order_list(user_token: int):
+    order = []
+    for item in db.get_order(user_token):
+        dish = db.get_dish(item[2])
+        order.append({"id": item[0], "token": item[1], "dish_id": dish[0], "name": dish[3], "category": dish[2],
+                      "description": dish[1],
+                      "price": dish[4], 'img_url': dish[5]})
+    return order

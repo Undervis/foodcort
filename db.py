@@ -55,6 +55,10 @@ def add_to_order(token, cart_ids: list):
     sql.commit()
 
 
+def get_order(token):
+    return cursor.execute(f"select * from Orders where user_token={token}").fetchall()
+
+
 def delete_from_order(token):
     cursor.execute(f"delete from Orders where user_token={token}")
     sql.commit()
