@@ -25,9 +25,13 @@ def get_dishes():
 
 
 def add_dish(category, name, price, img, description):
-    cursor.execute(f'insert into Dish (category, name, price, img, description)'
-                   f' values ("{category}", "{name}", {price}, "{img}", "{description}")')
-    sql.commit()
+    if not len(cursor.execute(f'select * from Dish where name="{name}" or description="{description}"').fetchall()) > 0:
+        cursor.execute(f'insert into Dish (category, name, price, img, description)'
+                       f' values ("{category}", "{name}", {price}, "{img}", "{description}")')
+        sql.commit()
+        return 0
+    else:
+        return 2
 
 
 def add_to_cart(token, dish_id):
