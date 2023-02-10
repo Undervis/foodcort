@@ -15,7 +15,7 @@ cursor.execute('create table if not exists Cart('
                'dish_id int references Dish(id))')
 cursor.execute('create table if not exists Orders('
                'id integer primary key autoincrement, user_token references User(token), '
-               'dish_id int references Dish(id))')
+               'cart_id int references Cart(id))')
 sql.commit()
 
 

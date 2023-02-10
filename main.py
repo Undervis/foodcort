@@ -127,6 +127,7 @@ async def delete_from_order(user_token: int):
 async def get_order_list(user_token: int):
     order = []
     for item in db.get_order(user_token):
+        print(item)
         dish = db.get_dish(item[2])
         order.append({"id": item[0], "token": item[1], "dish_id": dish[0], "name": dish[3], "category": dish[2],
                       "description": dish[1],
